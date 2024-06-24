@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import omit from 'lodash.omit';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React , {useState} from 'react';
 import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl';
 import {connect} from 'react-redux';
 import MediaQuery from 'react-responsive';
@@ -123,6 +123,7 @@ const GUIComponent = props => {
         telemetryModalVisible,
         theme,
         tipsLibraryVisible,
+        colFlex,
         vm,
         ...componentProps
     } = omit(props, 'dispatch');
@@ -142,9 +143,12 @@ const GUIComponent = props => {
     if (isRendererSupported === null) {
         isRendererSupported = Renderer.isSupported();
     }
+    const [collapse , setCollapse] = useState(false)
+    console.log(colFlex);
 
     return (<MediaQuery minWidth={layout.fullSizeMinWidth}>{isFullSize => {
         const stageSize = resolveStageSize(stageSizeMode, isFullSize);
+        console.log(isFullSize);
 
         return isPlayerOnly ? (
             <StageWrapper
@@ -245,7 +249,7 @@ const GUIComponent = props => {
                     onToggleLoginOpen={onToggleLoginOpen}
                 />
                 <Box className={styles.bodyWrapper}>
-                    <Box className={styles.flexWrapper}>
+                    <Box className={colFlex? styles.colFlex : styles.flexWrapper}>
                         <Box className={styles.editorWrapper}>
                             <Tabs
                                 forceRenderTabPanel
@@ -314,7 +318,7 @@ const GUIComponent = props => {
                                             options={{
                                                 media: `${basePath}static/${themeMap[theme].blocksMediaFolder}/`
                                             }}
-                                            stageSize={stageSize}
+                                            stageSize={collapse || colFlex ? 'small' : stageSize}
                                             theme={theme}
                                             vm={vm}
                                         />
@@ -335,6 +339,14 @@ const GUIComponent = props => {
                                     <Box className={styles.watermark}>
                                         <Watermark />
                                     </Box>
+                                    {colFlex ? null : <Box className={styles.collapse}>
+                                        <button onClick={() => {
+                                            setCollapse(!collapse)
+                                            console.log(collapse);
+                                        }}>
+                                            Click
+                                        </button>
+                                    </Box>}
                                 </TabPanel>
                                 <TabPanel className={tabClassNames.tabPanel}>
                                     {costumesTabVisible ? <CostumeTab vm={vm} /> : null}
@@ -343,12 +355,13 @@ const GUIComponent = props => {
                                     {soundsTabVisible ? <SoundTab vm={vm} /> : null}
                                 </TabPanel>
                             </Tabs>
+                            
                             {backpackVisible ? (
                                 <Backpack host={backpackHost} />
                             ) : null}
                         </Box>
 
-                        <Box className={classNames(styles.stageAndTargetWrapper, styles[stageSize])}>
+                        <Box className={collapse ? styles.collapseSide :classNames(styles.stageAndTargetWrapper, styles[stageSize])}>
                             <StageWrapper
                                 isFullScreen={isFullScreen}
                                 isRendererSupported={isRendererSupported}
@@ -466,6 +479,7 @@ const mapStateToProps = state => ({
     // This is the button's mode, as opposed to the actual current state
     blocksId: state.scratchGui.timeTravel.year.toString(),
     stageSizeMode: state.scratchGui.stageSize.stageSize,
+    colFlex: state.scratchGui.stageSize.colFlex,
     theme: state.scratchGui.theme.theme
 });
 

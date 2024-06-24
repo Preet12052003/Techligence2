@@ -13,7 +13,8 @@ const STAGE_SIZE_MODES = keyMirror({
     /**
      * The "small stage" button is pressed; the user would like a small stage.
      */
-    small: null
+    small: null,
+    columnFlex: null
 });
 
 /**

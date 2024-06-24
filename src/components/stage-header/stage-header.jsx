@@ -58,6 +58,8 @@ const StageHeaderComponent = function (props) {
         onSetStageUnFull,
         showBranding,
         stageSizeMode,
+        colFlex,
+        onSetColFlex,
         vm
     } = props;
 
@@ -118,14 +120,21 @@ const StageHeaderComponent = function (props) {
                                 handleClick: onSetStageSmall,
                                 icon: smallStageIcon,
                                 iconClassName: styles.stageButtonIcon,
-                                isSelected: stageSizeMode === STAGE_SIZE_MODES.small,
+                                isSelected: !colFlex && stageSizeMode === STAGE_SIZE_MODES.small,
                                 title: props.intl.formatMessage(messages.smallStageSizeMessage)
                             },
                             {
                                 handleClick: onSetStageLarge,
                                 icon: largeStageIcon,
                                 iconClassName: styles.stageButtonIcon,
-                                isSelected: stageSizeMode === STAGE_SIZE_MODES.large,
+                                isSelected: !colFlex && stageSizeMode === STAGE_SIZE_MODES.large,
+                                title: props.intl.formatMessage(messages.largeStageSizeMessage)
+                            },
+                            {
+                                handleClick: onSetColFlex,
+                                icon: largeStageIcon,
+                                iconClassName: styles.stageButtonIcon,
+                                isSelected: colFlex === true,
                                 title: props.intl.formatMessage(messages.largeStageSizeMessage)
                             }
                         ]}
@@ -163,7 +172,8 @@ const StageHeaderComponent = function (props) {
 
 const mapStateToProps = state => ({
     // This is the button's mode, as opposed to the actual current state
-    stageSizeMode: state.scratchGui.stageSize.stageSize
+    stageSizeMode: state.scratchGui.stageSize.stageSize,
+    colFlex: state.scratchGui.stageSize.colFlex,
 });
 
 StageHeaderComponent.propTypes = {
@@ -175,6 +185,7 @@ StageHeaderComponent.propTypes = {
     onSetStageLarge: PropTypes.func.isRequired,
     onSetStageSmall: PropTypes.func.isRequired,
     onSetStageUnFull: PropTypes.func.isRequired,
+    onSetColFlex: PropTypes.func.isRequired,
     showBranding: PropTypes.bool.isRequired,
     stageSizeMode: PropTypes.oneOf(Object.keys(STAGE_SIZE_MODES)),
     vm: PropTypes.instanceOf(VM).isRequired

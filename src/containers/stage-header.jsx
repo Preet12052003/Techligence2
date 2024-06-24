@@ -3,7 +3,7 @@ import React from 'react';
 import bindAll from 'lodash.bindall';
 import VM from 'scratch-vm';
 import {STAGE_SIZE_MODES} from '../lib/layout-constants';
-import {setStageSize} from '../reducers/stage-size';
+import {setStageSize , setColFlex} from '../reducers/stage-size';
 import {setFullScreen} from '../reducers/mode';
 
 import {connect} from 'react-redux';
@@ -53,6 +53,7 @@ StageHeader.propTypes = {
 
 const mapStateToProps = state => ({
     stageSizeMode: state.scratchGui.stageSize.stageSize,
+    colFlex: state.scratchGui.stageSize.colFex,
     showBranding: state.scratchGui.mode.showBranding,
     isFullScreen: state.scratchGui.mode.isFullScreen,
     isPlayerOnly: state.scratchGui.mode.isPlayerOnly
@@ -62,7 +63,8 @@ const mapDispatchToProps = dispatch => ({
     onSetStageLarge: () => dispatch(setStageSize(STAGE_SIZE_MODES.large)),
     onSetStageSmall: () => dispatch(setStageSize(STAGE_SIZE_MODES.small)),
     onSetStageFull: () => dispatch(setFullScreen(true)),
-    onSetStageUnFull: () => dispatch(setFullScreen(false))
+    onSetStageUnFull: () => dispatch(setFullScreen(false)),
+    onSetColFlex : () => dispatch(setColFlex())
 });
 
 export default connect(
